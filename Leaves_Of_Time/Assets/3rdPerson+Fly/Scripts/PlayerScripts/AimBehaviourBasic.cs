@@ -116,7 +116,7 @@ public class AimBehaviourBasic : GenericBehaviour
 
 		// Rotate entire player to face camera.
 		behaviourManager.SetLastDirection(forward);
-		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, minSpeed * Time.deltaTime);
+		transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, minSpeed * Time.unscaledDeltaTime);
 
 	}
 
