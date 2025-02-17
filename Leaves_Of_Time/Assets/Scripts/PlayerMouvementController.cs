@@ -25,7 +25,11 @@ public class CustomPlayerMovement : MonoBehaviour
     private Vignette vignette;
     private bool canBreakTime = false;
 
-    public bool CanBreakTime => canBreakTime;
+    public bool CanBreakTime
+    {
+        get => canBreakTime;
+        set => canBreakTime = value;
+    }
 
     [Header("Camera Effect")]
     public Transform cameraTarget; // 🎥 Objet vers lequel la caméra regarde (ex: Player)
