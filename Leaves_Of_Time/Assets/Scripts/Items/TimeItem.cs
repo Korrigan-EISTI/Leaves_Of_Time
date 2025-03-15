@@ -9,7 +9,7 @@ public class TimeItem : Items
         if (timeControl != null)
         {
             timeControl.canBreakTime = true;
-            Debug.Log("✅ Le joueur peut maintenant arrêter le temps !");
+            Debug.Log(" Le joueur peut maintenant arrêter le temps !");
         }
     }
 }

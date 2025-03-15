@@ -1,16 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ArtefacItem : Items
 {
     public override void ExecuteAction(GameObject player)
     {
-        CustomPlayerMovement customPlayer = player.GetComponent<CustomPlayerMovement>();
+        MoveBehaviour customPlayer = player.GetComponent<MoveBehaviour>();
         if (customPlayer != null)
         {
-            //TODO Add some score 
-            return;
+            customPlayer.CollectArtifact(); // Incrémente le compteur d'artefacts
+        }
+        else
+        {
+            Debug.LogError("MoveBehaviour non trouvé sur le joueur !");
         }
     }
 }
