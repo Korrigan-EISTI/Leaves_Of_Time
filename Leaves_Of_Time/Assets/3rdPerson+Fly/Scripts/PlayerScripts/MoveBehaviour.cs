@@ -18,8 +18,21 @@ public class MoveBehaviour : GenericBehaviour
 	private bool jump;                              // Boolean to determine whether or not the player started a jump.
 	private bool isColliding;                       // Boolean to determine if the player has collided with an obstacle.
 
-	// Start is always called after any Awake functions.
-	void Start()
+
+
+
+    [Header("Artifacts Collection")]
+    private int artifactsCollected = 0; // Compteur d'artefacts
+    private const int MAX_ARTIFACTS = 7; // Limite d'artefacts (7)
+
+    // Propriété publique pour accéder au nombre d'artefacts collectés (utile pour l'UI ou d'autres scripts)
+    public int ArtifactsCollected
+    {
+        get { return artifactsCollected; }
+    }
+
+    // Start is always called after any Awake functions.
+    void Start()
 	{
 		// Set up the references.
 		jumpBool = Animator.StringToHash("Jump");
@@ -42,8 +55,33 @@ public class MoveBehaviour : GenericBehaviour
 		}
 	}
 
-	// LocalFixedUpdate overrides the virtual function of the base class.
-	public override void LocalFixedUpdate()
+
+    public void CollectArtifact()
+    {
+        if (artifactsCollected < MAX_ARTIFACTS)
+        {
+            artifactsCollected++;
+            Debug.Log($"Artefact collecté ! Total : {artifactsCollected}/{MAX_ARTIFACTS}");
+            if (artifactsCollected == MAX_ARTIFACTS)
+            {
+                Debug.Log("Félicitations ! Tous les artefacts ont été collectés !");
+                // Tu peux ajouter une action ici, comme déclencher une fin de niveau
+                // Exemple : SceneManager.LoadScene("VictoryScene");
+            }
+        }
+        else
+        {
+            Debug.Log("Tous les artefacts ont été collectés !");
+        }
+    }
+
+    public bool HasAllArtifacts()
+    {
+        return artifactsCollected >= MAX_ARTIFACTS;
+    }
+
+    // LocalFixedUpdate overrides the virtual function of the base class.
+    public override void LocalFixedUpdate()
 	{
 		// Call the basic movement manager.
 		MovementManagement(behaviourManager.GetH, behaviourManager.GetV);
