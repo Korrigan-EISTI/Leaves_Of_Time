@@ -4,7 +4,7 @@ using Chronos;
 
 public class AssignShaderScript : MonoBehaviour
 {
-    public Timekeeper timekeeper; // Référence au Timekeeper Chronos
+    public Timekeeper timekeeper;
 
     void Start()
     {
@@ -43,7 +43,6 @@ public class AssignShaderScript : MonoBehaviour
                 if (updateScript == null)
                 {
                     updateScript = child.gameObject.AddComponent<UpdateShaderProperty>();
-                    Debug.Log($"Script UpdateShaderProperty ajouté à {child.name}");
                 }
 
                 // Assigne les références nécessaires
