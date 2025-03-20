@@ -20,8 +20,8 @@ public class TimeItem : Items
 
         if (timeControl != null)
         {
-            timeControl.canBreakTime = true;
-            Debug.Log("Le joueur peut maintenant arrêter le temps !");
+            timeControl.AddTimeItem(); // Incrémente le compteur et active canBreakTime
+            Debug.Log("Item de temps collecté ! Total : " + timeControl.timeItemsCount);
         }
 
         if (!isRespawning)

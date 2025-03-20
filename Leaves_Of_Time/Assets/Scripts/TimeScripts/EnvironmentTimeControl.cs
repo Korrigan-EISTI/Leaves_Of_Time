@@ -6,6 +6,7 @@ public class EnvironmentTimeControl : MonoBehaviour
 {
     private bool isPaused = false;
     public bool canBreakTime = false;
+    public int timeItemsCount = 0; // Compteur d'items de temps
     public float pauseDuration = 3f;
     public float mainDollyZoomEffectDuration = 2f;
     public Camera mainCamera;
@@ -22,16 +23,31 @@ public class EnvironmentTimeControl : MonoBehaviour
             mainCamera = Camera.main;
 
         originalFOV = mainCamera.fieldOfView;
+        Debug.Log($"EnvironmentTimeControl initialisé sur {gameObject.name}, timeItemsCount initial : {timeItemsCount}");
     }
 
     private void Update()
     {
         Clock clock = Timekeeper.instance.Clock("GroupEnvironment");
 
-        if (Input.GetKeyDown(pauseKey) && canBreakTime && !isPaused)
+        if (Input.GetKeyDown(pauseKey) && canBreakTime && !isPaused && timeItemsCount > 0)
         {
             StartCoroutine(HandleTimePause(clock));
+            timeItemsCount--;
+            Debug.Log($"Touche C pressée ! timeItemsCount décrémenté à {timeItemsCount}");
+            if (timeItemsCount <= 0)
+            {
+                canBreakTime = false;
+                Debug.Log("Plus d'items de temps, canBreakTime désactivé !");
+            }
         }
+    }
+
+    public void AddTimeItem()
+    {
+        timeItemsCount++;
+        canBreakTime = true;
+        Debug.Log($"AddTimeItem appelé ! timeItemsCount = {timeItemsCount}, canBreakTime = {canBreakTime}");
     }
 
     private IEnumerator HandleTimePause(Clock clock)

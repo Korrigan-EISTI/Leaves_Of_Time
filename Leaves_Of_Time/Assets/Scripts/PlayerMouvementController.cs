@@ -25,6 +25,7 @@ public class CustomPlayerMovement : MonoBehaviour
     private Vignette vignette;
     private bool canBreakTime = false;
 
+
     public bool CanBreakTime
     {
         get => canBreakTime;
@@ -48,6 +49,7 @@ public class CustomPlayerMovement : MonoBehaviour
         Vector3 targetPosition = cameraTarget.position + originalCameraOffset;
         cameraTransform.position = Vector3.SmoothDamp(cameraTransform.position, targetPosition, ref cameraVelocity, cameraSmoothTime);
     }
+
 
     void Start()
     {
@@ -80,6 +82,9 @@ public class CustomPlayerMovement : MonoBehaviour
             HandleMovement(Time.unscaledDeltaTime);
         }
     }
+
+
+ 
 
     private void HandleMovement(float deltaTime)
     {
