@@ -14,6 +14,7 @@ public class EnvironmentTimeControl : MonoBehaviour
     private float originalFOV;
     public TimeEffects timeEffects;
     public KeyCode pauseKey = KeyCode.C;
+    public Terrain terrain;
 
     private void Start()
     {
@@ -36,18 +37,22 @@ public class EnvironmentTimeControl : MonoBehaviour
     private IEnumerator HandleTimePause(Clock clock)
     {
         isPaused = true;
-        yield return StartCoroutine(DollyZoomEffect(mainCamera.fieldOfView, originalFOV * 2, mainDollyZoomEffectDuration));
+        yield return StartCoroutine(DollyZoomEffect(mainCamera.fieldOfView, originalFOV + 20f, mainDollyZoomEffectDuration));
         yield return StartCoroutine(DollyZoomEffect(mainCamera.fieldOfView, zoomFOV, mainDollyZoomEffectDuration / 10));
 
+        float startSpeed = terrain.terrainData.wavingGrassStrength;
         clock.localTimeScale = 0;
+        terrain.terrainData.wavingGrassStrength = 0f;
         StartCoroutine(timeEffects.ApplyDesaturation(1f, false));
         yield return new WaitForSecondsRealtime(pauseDuration);
 
         StartCoroutine(timeEffects.ApplyDesaturation(1f, true));
         yield return StartCoroutine(DollyZoomEffect(mainCamera.fieldOfView, zoomFOV, mainDollyZoomEffectDuration));
-        yield return StartCoroutine(DollyZoomEffect(mainCamera.fieldOfView, originalFOV, mainDollyZoomEffectDuration / 10));
+        yield return StartCoroutine(DollyZoomEffect(mainCamera.fieldOfView, originalFOV + 20f, mainDollyZoomEffectDuration / 10));
 
+        mainCamera.fieldOfView = originalFOV;
         clock.localTimeScale = 1;
+        terrain.terrainData.wavingGrassStrength = startSpeed;
         isPaused = false;
     }
 

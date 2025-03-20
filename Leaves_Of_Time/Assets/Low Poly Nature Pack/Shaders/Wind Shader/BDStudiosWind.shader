@@ -1,5 +1,4 @@
 Shader "BDStudios/Wind" {
-
     Properties{
         _MainTex("Main Texture", 2D) = "white" {}
         _Tint("Tint", Color) = (1,1,1,1)
@@ -20,64 +19,60 @@ Shader "BDStudios/Wind" {
         _r_influence("Red Vertex Influence", range(0,1)) = 1
         _b_influence("Blue Vertex Influence", range(0,1)) = 1
 
+        _TimeScale("Time Scale", float) = 1.0 // Ajout pour Chronos
     }
 
-        SubShader{
+    SubShader{
+        CGPROGRAM
+        #pragma target 3.0
+        #pragma surface surf Lambert vertex:vert addshadow
 
-            CGPROGRAM
-            #pragma target 3.0
-            #pragma surface surf Lambert vertex:vert addshadow
+        // Déclaration des variables
+        float4 _wind_dir;
+        float _wind_size;
+        float _tree_sway_speed;
+        float _tree_sway_disp;
+        float _leaves_wiggle_disp;
+        float _leaves_wiggle_speed;
+        float _branches_disp;
+        float _tree_sway_stutter;
+        float _tree_sway_stutter_influence;
+        float _r_influence;
+        float _b_influence;
+        float _TimeScale; // Variable pour ajuster le vent avec Chronos
 
-            //Declared Variables
-            float4 _wind_dir;
-            float _wind_size;
-            float _tree_sway_speed;
-            float _tree_sway_disp;
-            float _leaves_wiggle_disp;
-            float _leaves_wiggle_speed;
-            float _branches_disp;
-            float _tree_sway_stutter;
-            float _tree_sway_stutter_influence;
-            float _r_influence;
-            float _b_influence;
+        sampler2D _MainTex;
+        fixed4 _Tint;
 
-            sampler2D _MainTex;
-            fixed4 _Tint;
+        struct Input {
+            float2 uv_MainTex;
+        };
 
-            //Structs
-            struct Input {
-                float2 uv_MainTex;
-            };
+        // Fonction de modification des sommets
+        void vert(inout appdata_full i) {
+            float3 worldPos = mul(unity_ObjectToWorld, i.vertex).xyz;
 
-            // Vertex Manipulation Function
-            void vert(inout appdata_full i) {
+            // Modification : Appliquer _TimeScale pour arrêter le vent quand Timekeeper le demande
+            float scaledTimeZ = _Time.z * _TimeScale;
+            float scaledTimeW = _Time.w * _TimeScale;
 
-                //Gets the vertex's World Position 
-               float3 worldPos = mul(unity_ObjectToWorld, i.vertex).xyz;
+            i.vertex.x += (cos(scaledTimeZ * _tree_sway_speed + (worldPos.x / _wind_size) + (sin(scaledTimeZ * _tree_sway_stutter * _tree_sway_speed + (worldPos.x / _wind_size)) * _tree_sway_stutter_influence)) + 1) / 2 * _tree_sway_disp * _wind_dir.x * (i.vertex.y / 10) +
+            cos(scaledTimeW * i.vertex.x * _leaves_wiggle_speed + (worldPos.x / _wind_size)) * _leaves_wiggle_disp * _wind_dir.x * i.color.b * _b_influence;
 
-               //Tree Movement and Wiggle
-               i.vertex.x += (cos(_Time.z * _tree_sway_speed + (worldPos.x / _wind_size) + (sin(_Time.z * _tree_sway_stutter * _tree_sway_speed + (worldPos.x / _wind_size)) * _tree_sway_stutter_influence)) + 1) / 2 * _tree_sway_disp * _wind_dir.x * (i.vertex.y / 10) +
-               cos(_Time.w * i.vertex.x * _leaves_wiggle_speed + (worldPos.x / _wind_size)) * _leaves_wiggle_disp * _wind_dir.x * i.color.b * _b_influence;
+            i.vertex.z += (cos(scaledTimeZ * _tree_sway_speed + (worldPos.z / _wind_size) + (sin(scaledTimeZ * _tree_sway_stutter * _tree_sway_speed + (worldPos.z / _wind_size)) * _tree_sway_stutter_influence)) + 1) / 2 * _tree_sway_disp * _wind_dir.z * (i.vertex.y / 10) +
+            cos(scaledTimeW * i.vertex.z * _leaves_wiggle_speed + (worldPos.x / _wind_size)) * _leaves_wiggle_disp * _wind_dir.z * i.color.b * _b_influence;
 
-               i.vertex.z += (cos(_Time.z * _tree_sway_speed + (worldPos.z / _wind_size) + (sin(_Time.z * _tree_sway_stutter * _tree_sway_speed + (worldPos.z / _wind_size)) * _tree_sway_stutter_influence)) + 1) / 2 * _tree_sway_disp * _wind_dir.z * (i.vertex.y / 10) +
-               cos(_Time.w * i.vertex.z * _leaves_wiggle_speed + (worldPos.x / _wind_size)) * _leaves_wiggle_disp * _wind_dir.z * i.color.b * _b_influence;
+            i.vertex.y += cos(scaledTimeZ * _tree_sway_speed + (worldPos.z / _wind_size)) * _tree_sway_disp * _wind_dir.y * (i.vertex.y / 10);
 
-               i.vertex.y += cos(_Time.z * _tree_sway_speed + (worldPos.z / _wind_size)) * _tree_sway_disp * _wind_dir.y * (i.vertex.y / 10);
-
-               //Branches Movement
-               i.vertex.y += sin(_Time.w * _tree_sway_speed + _wind_dir.x + (worldPos.z / _wind_size)) * _branches_disp * i.color.r * _r_influence;
-
-           }
-
-            // Surface Shader
-            void surf(Input IN, inout SurfaceOutput o) {
-                fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Tint;
-                o.Albedo = c.rgb;
-                o.Alpha = c.a;
-            }
-
-    ENDCG
+            i.vertex.y += sin(scaledTimeW * _tree_sway_speed + _wind_dir.x + (worldPos.z / _wind_size)) * _branches_disp * i.color.r * _r_influence;
         }
 
-            Fallback "Diffuse"
+        void surf(Input IN, inout SurfaceOutput o) {
+            fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Tint;
+            o.Albedo = c.rgb;
+            o.Alpha = c.a;
+        }
+        ENDCG
+    }
+    Fallback "Diffuse"
 }
