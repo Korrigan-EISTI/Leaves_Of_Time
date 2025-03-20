@@ -9,6 +9,7 @@ public class TerrainBorder : MonoBehaviour
     public int innerDensity = 20; // Densité minimale sur la couche la plus intérieure
     public int depthLayers = 3; // Nombre de couches d'arbres en profondeur
     public float depthSpacing = 3f; // Distance entre chaque ligne d'arbres en profondeur
+    public Transform parent;
 
     void Start()
     {
@@ -97,7 +98,7 @@ public class TerrainBorder : MonoBehaviour
         float y = terrain.SampleHeight(new Vector3(x, 0, z)) - 0.5f; // Ajustement pour éviter qu'il flotte
 
         // Créer l'arbre
-        GameObject tree = Instantiate(treePrefab, new Vector3(x, y, z), Quaternion.identity);
+        GameObject tree = Instantiate(treePrefab, new Vector3(x, y, z), Quaternion.identity, parent);
 
         // Appliquer une rotation aléatoire
         tree.transform.Rotate(0, Random.Range(0, 360), 0);
