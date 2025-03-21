@@ -43,7 +43,7 @@ public class ArtifactUI : MonoBehaviour
         if (artifactText != null && player != null)
         {
             artifactText.text = $"{player.ArtifactsCollected}";
-           /* Debug.Log($"UI mise à jour : {player.ArtifactsCollected}/7");*/
+            Debug.Log($"UI mise à jour : {player.ArtifactsCollected}/7");
         }
         else
         {
