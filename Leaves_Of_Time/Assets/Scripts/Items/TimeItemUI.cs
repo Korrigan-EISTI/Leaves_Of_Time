@@ -10,6 +10,8 @@ public class TimeItemUI : MonoBehaviour
 
     void Start()
     {
+        Debug.Log("TimeItemUI démarré sur " + gameObject.name);
+
         if (timeControl == null)
         {
             timeControl = FindObjectOfType<EnvironmentTimeControl>();
@@ -19,7 +21,7 @@ public class TimeItemUI : MonoBehaviour
             }
             else
             {
-                Debug.Log("EnvironmentTimeControl trouvé avec succès ! timeItemsCount initial : " + timeControl.timeItemsCount);
+                Debug.Log("EnvironmentTimeControl trouvé avec succès ! timeItemsCount initial : " + timeControl.timeItemsCount + ", trouvé sur : " + timeControl.gameObject.name);
             }
         }
 
@@ -30,7 +32,7 @@ public class TimeItemUI : MonoBehaviour
         else
         {
             Debug.Log("TimeItemText assigné avec succès !");
-            timeItemText.transform.localScale = Vector3.one; // Assure que l'échelle est correcte
+            timeItemText.transform.localScale = Vector3.one;
         }
 
         UpdateUI();
@@ -38,7 +40,6 @@ public class TimeItemUI : MonoBehaviour
 
     void Update()
     {
-        // Test manuel avec la touche T
         if (Input.GetKeyDown(KeyCode.T))
         {
             if (timeControl != null)
