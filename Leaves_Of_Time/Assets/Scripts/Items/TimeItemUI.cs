@@ -7,6 +7,7 @@ public class TimeItemUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timeItemText;
     [SerializeField] private EnvironmentTimeControl timeControl;
     private int lastTimeItemCount = 0;
+    private Vector3 initialScale; // Pour stocker le scale initial
 
     void Start()
     {
@@ -32,7 +33,7 @@ public class TimeItemUI : MonoBehaviour
         else
         {
             Debug.Log("TimeItemText assigné avec succès !");
-            timeItemText.transform.localScale = Vector3.one;
+            initialScale = timeItemText.transform.localScale; // Stocke le scale initial
         }
 
         UpdateUI();
@@ -84,26 +85,33 @@ public class TimeItemUI : MonoBehaviour
     IEnumerator AnimateText()
     {
         Debug.Log("Animation du texte déclenchée !");
-        float scaleUp = 1.2f;
-        float scaleDown = 1f;
+        float scaleUpMultiplier = 1.2f; // Grossit de 20%
         float duration = 0.2f;
 
+        // Calcule le scale maximum en fonction du scale initial
+        Vector3 scaleUp = initialScale * scaleUpMultiplier;
+
+        // Grossissement
         float elapsed = 0f;
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            float scale = Mathf.Lerp(1f, scaleUp, elapsed / duration);
-            timeItemText.transform.localScale = new Vector3(scale, scale, 1f);
+            float t = elapsed / duration;
+            timeItemText.transform.localScale = Vector3.Lerp(initialScale, scaleUp, t);
             yield return null;
         }
 
+        // Retour au scale initial
         elapsed = 0f;
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            float scale = Mathf.Lerp(scaleUp, scaleDown, elapsed / duration);
-            timeItemText.transform.localScale = new Vector3(scale, scale, 1f);
+            float t = elapsed / duration;
+            timeItemText.transform.localScale = Vector3.Lerp(scaleUp, initialScale, t);
             yield return null;
         }
+
+        // S'assure que le scale final est exactement le scale initial
+        timeItemText.transform.localScale = initialScale;
     }
 }
