@@ -3,7 +3,7 @@ using UnityEngine;
 public class CursorManager : MonoBehaviour
 {
     public Canvas[] canvases; // Assignez ici tous les Canvas que vous voulez vérifier
-    private bool isOldCanvasActive = false;
+    private bool isOldCanvasActive = true;
 
     void Update()
     {
@@ -15,10 +15,6 @@ public class CursorManager : MonoBehaviour
             {
                 anyCanvasActive = true;
                 break;
-            }
-            else
-            {
-                int z = 0;
             }
         }
 
