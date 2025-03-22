@@ -7,6 +7,7 @@ public class TimeItemUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI timeItemText;
     [SerializeField] private EnvironmentTimeControl timeControl;
     private int lastTimeItemCount = 0;
+    [SerializeField] private bool isDebug = false;
 
     void Start()
     {
@@ -40,7 +41,7 @@ public class TimeItemUI : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.T) && isDebug)
         {
             if (timeControl != null)
             {
@@ -71,7 +72,6 @@ public class TimeItemUI : MonoBehaviour
         if (timeItemText != null && timeControl != null)
         {
             timeItemText.text = $"{timeControl.timeItemsCount}";
-            Debug.Log($"UI mise à jour : {timeControl.timeItemsCount} items de temps");
         }
         else
         {

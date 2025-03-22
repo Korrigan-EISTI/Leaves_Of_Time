@@ -19,28 +19,38 @@ public class PlayerRespawn : MonoBehaviour
 
     private void Start()
     {
-        initialPosition = transform.position;
-        initialRotation = transform.rotation;
+        InitialPosition = transform.position;
+        InitialRotation = transform.rotation;
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        Renderer renderer = collision.gameObject.GetComponent<Renderer>();
+        float closestDistance = float.MaxValue; // Initialize with a large value
+        Material closestMaterial = null;
 
-        if (renderer != null && renderer.sharedMaterial != null)
+        foreach (ContactPoint contact in collision.contacts)
         {
-            string materialName = renderer.sharedMaterial.name.ToLower();
-
-            if (materialName.Contains("water"))
+            Renderer renderer = contact.otherCollider.gameObject.GetComponent<Renderer>();
+            if (renderer != null && renderer.sharedMaterial != null)
             {
-                RespawnPlayer();
+                float distance = (contact.point - transform.position).sqrMagnitude; // Use squared magnitude for efficiency
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    closestMaterial = renderer.sharedMaterial;
+                }
             }
+        }
+
+        if (closestMaterial != null && closestMaterial.name.ToLower().Contains("water"))
+        {
+            RespawnPlayer();
         }
     }
 
     private void RespawnPlayer()
     {
-        transform.position = initialPosition;
-        transform.rotation = initialRotation;
+        transform.position = InitialPosition;
+        transform.rotation = InitialRotation;
     }
 }
