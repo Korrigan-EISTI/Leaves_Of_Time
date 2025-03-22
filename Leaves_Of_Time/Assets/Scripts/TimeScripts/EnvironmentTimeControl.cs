@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Chronos;
 using UnityEngine;
+using TMPro;
 
 public class EnvironmentTimeControl : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class EnvironmentTimeControl : MonoBehaviour
     public TimeEffects timeEffects;
     public KeyCode pauseKey = KeyCode.C;
     public Terrain terrain;
+    public TextMeshProUGUI timeStopPrompt;
+    private bool hasShownPrompt = false;
 
     private void Start()
     {
@@ -24,6 +27,11 @@ public class EnvironmentTimeControl : MonoBehaviour
 
         originalFOV = mainCamera.fieldOfView;
         Debug.Log($"EnvironmentTimeControl initialisé sur {gameObject.name}, timeItemsCount initial : {timeItemsCount}");
+
+        if (timeStopPrompt != null)
+        {
+            timeStopPrompt.gameObject.SetActive(false);
+        }
     }
 
     private void Update()
@@ -35,6 +43,12 @@ public class EnvironmentTimeControl : MonoBehaviour
             StartCoroutine(HandleTimePause(clock));
             timeItemsCount--;
             Debug.Log($"Touche C pressée ! timeItemsCount décrémenté à {timeItemsCount}");
+
+            if (timeStopPrompt != null)
+            {
+                timeStopPrompt.gameObject.SetActive(false);
+            }
+
             if (timeItemsCount <= 0)
             {
                 canBreakTime = false;
@@ -48,6 +62,12 @@ public class EnvironmentTimeControl : MonoBehaviour
         timeItemsCount++;
         canBreakTime = true;
         Debug.Log($"AddTimeItem appelé ! timeItemsCount = {timeItemsCount}, canBreakTime = {canBreakTime}");
+
+        if (timeItemsCount == 1 && !hasShownPrompt && timeStopPrompt != null)
+        {
+            timeStopPrompt.gameObject.SetActive(true);
+            hasShownPrompt = true; 
+        }
     }
 
     private IEnumerator HandleTimePause(Clock clock)
