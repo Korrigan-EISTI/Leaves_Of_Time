@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.SceneManagement;
 
 // MoveBehaviour inherits from GenericBehaviour. This class corresponds to basic walk and run behaviour, it is the default behaviour.
 public class MoveBehaviour : GenericBehaviour
@@ -23,7 +24,7 @@ public class MoveBehaviour : GenericBehaviour
 
     [Header("Artifacts Collection")]
     private int artifactsCollected = 0; // Compteur d'artefacts
-    private const int MAX_ARTIFACTS = 7; // Limite d'artefacts (7)
+    private const int MAX_ARTIFACTS = 5; // Limite d'artefacts (5)
 
     // Propriété publique pour accéder au nombre d'artefacts collectés (utile pour l'UI ou d'autres scripts)
     public int ArtifactsCollected
@@ -65,8 +66,7 @@ public class MoveBehaviour : GenericBehaviour
             if (artifactsCollected == MAX_ARTIFACTS)
             {
                 Debug.Log("Félicitations ! Tous les artefacts ont été collectés !");
-                // Tu peux ajouter une action ici, comme déclencher une fin de niveau
-                // Exemple : SceneManager.LoadScene("VictoryScene");
+                SceneManager.LoadScene("EndGameMenu");
             }
         }
         else
