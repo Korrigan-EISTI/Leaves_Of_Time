@@ -67,6 +67,8 @@ public class MoveBehaviour : GenericBehaviour
             {
                 Debug.Log("Félicitations ! Tous les artefacts ont été collectés !");
                 SceneManager.LoadScene("EndGameMenu");
+                Cursor.lockState = CursorLockMode.None;
+                Cursor.visible = true;
             }
         }
         else

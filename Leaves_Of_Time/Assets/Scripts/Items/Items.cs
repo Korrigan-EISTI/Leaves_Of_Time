@@ -14,7 +14,7 @@ public abstract class Items : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             ExecuteAction(other.gameObject); // Exécute l'action spécifique à l'item
-            Destroy(gameObject); // Détruit l'item après utilisation
+            Destroy(gameObject);
         }
     }
 }
