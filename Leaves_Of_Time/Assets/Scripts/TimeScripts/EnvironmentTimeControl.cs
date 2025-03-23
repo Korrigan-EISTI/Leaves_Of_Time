@@ -19,6 +19,7 @@ public class EnvironmentTimeControl : MonoBehaviour
     public Terrain terrain;
     public TextMeshProUGUI timeStopPrompt;
     private bool hasShownPrompt = false;
+    public MenuManager menuManager;
 
     private void Start()
     {
@@ -38,7 +39,8 @@ public class EnvironmentTimeControl : MonoBehaviour
     {
         Clock clock = Timekeeper.instance.Clock("GroupEnvironment");
 
-        if (Input.GetKeyDown(pauseKey) && canBreakTime && !isPaused && timeItemsCount > 0)
+        // Vérifie si le menu est fermé avant de permettre la pause temporelle
+        if (Input.GetKeyDown(pauseKey) && canBreakTime && !isPaused && timeItemsCount > 0 && (menuManager == null || !menuManager.IsExitMenuOpen()))
         {
             StartCoroutine(HandleTimePause(clock));
             timeItemsCount--;
