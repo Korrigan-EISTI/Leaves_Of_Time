@@ -6,15 +6,17 @@ using UnityEngine.AI;
 public class NavMeshSpawner : MonoBehaviour
 {
     [Header("Paramètres de Spawn")]
-    [SerializeField] public GameObject prefab;                // Préfabriqué à instancier
-    [SerializeField] public float spawnInterval = 5f;        // Temps entre chaque spawn
-    [SerializeField] public List<Transform> waypoints;       // Liste des waypoints à suivre
+    [SerializeField] public GameObject prefab;
+    [SerializeField] public float spawnInterval = 5f;
+    [SerializeField] public List<Transform> waypoints;
+    [SerializeField] public List<float> speeds;
+    [SerializeField] public List<float> xRotations;
 
     private void Start()
     {
-        if (prefab == null || waypoints == null || waypoints.Count == 0)
+        if (prefab == null || waypoints == null || waypoints.Count == 0 || speeds == null || xRotations == null || speeds.Count != waypoints.Count - 1 || xRotations.Count != waypoints.Count - 1)
         {
-            Debug.LogError("Paramètres manquants sur NavMeshSpawner");
+            Debug.LogError("Paramètres manquants ou incorrects sur NavMeshSpawner");
             return;
         }
 
@@ -43,22 +45,26 @@ public class NavMeshSpawner : MonoBehaviour
         }
 
         AgentNavigator navigator = spawnedObject.AddComponent<AgentNavigator>();
-        navigator.Initialize(waypoints);
+        navigator.Initialize(waypoints, speeds, xRotations);
     }
 }
 
-public class AgentNavigator : MonoBehaviour 
+public class AgentNavigator : MonoBehaviour
 {
     private NavMeshAgent agent;
     private List<Transform> waypoints;
+    private List<float> speeds;
+    private List<float> xRotations;
     private int currentWaypointIndex = 0;
 
-    public void Initialize(List<Transform> waypoints)
+    public void Initialize(List<Transform> waypoints, List<float> speeds, List<float> xRotations)
     {
         this.waypoints = waypoints;
+        this.speeds = speeds;
+        this.xRotations = xRotations;
         agent = GetComponent<NavMeshAgent>();
 
-        if (agent == null || waypoints == null || waypoints.Count == 0)
+        if (agent == null || waypoints == null || waypoints.Count == 0 || speeds == null || xRotations == null)
         {
             Debug.LogError("Problème d'initialisation de l'agent.");
             Destroy(this);
@@ -80,7 +86,19 @@ public class AgentNavigator : MonoBehaviour
     {
         if (waypoints.Count == 0) return;
 
-        agent.SetDestination(waypoints[currentWaypointIndex].position);
-        currentWaypointIndex = (currentWaypointIndex + 1) % waypoints.Count;
+        if (currentWaypointIndex >= waypoints.Count - 1)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            agent.SetDestination(waypoints[currentWaypointIndex + 1].position);
+            agent.speed = speeds[currentWaypointIndex];
+
+            Vector3 currentRotation = transform.rotation.eulerAngles;
+            transform.rotation = Quaternion.Euler(xRotations[currentWaypointIndex], currentRotation.y, currentRotation.z);
+
+            currentWaypointIndex++;
+        }
     }
 }
