@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class TimeItemsRespawner : MonoBehaviour
 {
-    public GameObject timeItemPrefab; // 👉 assigné via l'inspecteur
+    public GameObject timeItemPrefab;
 
     private static TimeItemsRespawner instance;
 

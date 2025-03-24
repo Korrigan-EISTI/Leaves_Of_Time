@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class UpdateShaderProperty : MonoBehaviour
 {
-    public Material material;  // Assure-toi d'assigner le matériau qui utilise le shader graph.
-    public Timekeeper timekeeper; // Component that holds the localTimeScale
+    public Material material;  
+    public Timekeeper timekeeper; 
 
     void Update()
     {

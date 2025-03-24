@@ -8,7 +8,6 @@ public class MenuManager : MonoBehaviour
 
     void Start()
     {
-        // Assure-toi que le Canvas par défaut est actif et que ExitMenu est désactivé au démarrage
         if (defaultCanvas != null)
         {
             defaultCanvas.SetActive(true);
@@ -30,7 +29,7 @@ public class MenuManager : MonoBehaviour
 
     private void ToggleExitMenu()
     {
-        isExitMenuOpen = !isExitMenuOpen; // Inverse l'état du menu
+        isExitMenuOpen = !isExitMenuOpen; 
 
         if (isExitMenuOpen)
         {
@@ -44,7 +43,7 @@ public class MenuManager : MonoBehaviour
                 defaultCanvas.SetActive(false);
             }
             // Pause le jeu
-            Time.timeScale = 0; // Pause le jeu globalement
+            Time.timeScale = 0; 
         }
         else
         {
@@ -58,7 +57,7 @@ public class MenuManager : MonoBehaviour
                 defaultCanvas.SetActive(true);
             }
             // Reprend le jeu
-            Time.timeScale = 1; // Reprend le jeu globalement
+            Time.timeScale = 1; 
         }
     }
 

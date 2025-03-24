@@ -5,7 +5,7 @@ public class MainMenu : MonoBehaviour
 {
     public void RunGame()
     {
-        Debug.Log("Bouton 'Lancer' cliqué ! Tentative de chargement de la scène '3C_Presentation'.");
-        SceneManager.LoadScene("3C_Presentation");
+        Debug.Log("Bouton 'Lancer' cliqué ! Tentative de chargement de la scène 'Platforming'.");
+        SceneManager.LoadScene("Platforming");
     }
 }

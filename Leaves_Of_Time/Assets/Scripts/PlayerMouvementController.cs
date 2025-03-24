@@ -18,7 +18,7 @@ public class CustomPlayerMovement : MonoBehaviour
     private float verticalVelocity = 0f;
     private bool isPaused = false;
     private bool isJumping = false;
-    private bool isTransitioning = false; // 🔹 Empêche de spammer `C`
+    private bool isTransitioning = false; // Empêche de spammer `C`
 
     [Header("Post Processing Effects")]
     public PostProcessVolume postProcessingVolume;
@@ -33,19 +33,19 @@ public class CustomPlayerMovement : MonoBehaviour
     }
 
     [Header("Camera Effect")]
-    public Transform cameraTarget; // 🎥 Objet vers lequel la caméra regarde (ex: Player)
+    public Transform cameraTarget; // Objet vers lequel la caméra regarde
     private Vector3 originalCameraOffset;
-    public float cameraZoomOutDistance = 3f; // 🎥 Distance de recul
-    public float cameraZoomDuration = 0.4f; // 🎥 Durée du zoom arrière
-    public float cameraZoomInDuration = 0.1f; // 🎥 Durée du retour rapide
+    public float cameraZoomOutDistance = 3f; // Distance de recul
+    public float cameraZoomDuration = 0.4f; // Durée du zoom arrière
+    public float cameraZoomInDuration = 0.1f; // Durée du retour rapide
 
     [Header("Camera Smooth Settings")]
-    public float cameraSmoothTime = 0.15f; // 🎥 Plus petit = plus rapide, plus grand = plus fluide
-    private Vector3 cameraVelocity = Vector3.zero; // 🎥 Stocke la vitesse actuelle du SmoothDamp
+    public float cameraSmoothTime = 0.15f; // Plus petit = plus rapide, plus grand = plus fluide
+    private Vector3 cameraVelocity = Vector3.zero; // Stocke la vitesse actuelle du SmoothDamp
 
     void LateUpdate()
     {
-        // 🎥 Lissage du mouvement de la caméra avec SmoothDamp
+        // Lissage du mouvement de la caméra avec SmoothDamp
         Vector3 targetPosition = cameraTarget.position + originalCameraOffset;
         cameraTransform.position = Vector3.SmoothDamp(cameraTransform.position, targetPosition, ref cameraVelocity, cameraSmoothTime);
     }
@@ -113,7 +113,7 @@ public class CustomPlayerMovement : MonoBehaviour
             moveDirection.Normalize();
         }
 
-        // 🔹 Force la mise à jour de isGrounded en pause
+        // Force la mise à jour de isGrounded en pause
         if (isPaused)
         {
             controller.Move(Vector3.down * 0.01f);  // Petit mouvement vers le bas pour forcer la mise à jour
@@ -163,7 +163,7 @@ public class CustomPlayerMovement : MonoBehaviour
             isJumping = false;
             animator.SetBool("Jump", false);
             animator.SetBool("Grounded", true);
-            verticalVelocity = 0f; // 🔹 Remettre la vélocité à zéro
+            verticalVelocity = 0f; // Remettre la vélocité à zéro
         }
 
         if (jumpPressed && grounded) // Autoriser le saut même en pause
@@ -175,7 +175,7 @@ public class CustomPlayerMovement : MonoBehaviour
         }
     }
 
-    // 🔹 Coroutine pour ralentir le temps et activer progressivement la vignette
+    // Coroutine pour ralentir le temps et activer progressivement la vignette
     IEnumerator SlowDownTimeCoroutine(float duration)
     {
         var cameraController = cameraTransform.gameObject.GetComponent<TPSCameraController>();
@@ -190,19 +190,19 @@ public class CustomPlayerMovement : MonoBehaviour
         float startVignette = 0f;
         float endVignette = 1f;
 
-        Vector3 zoomOutTarget = cameraTransform.position - cameraTransform.forward * 10f; // 🔹 Ajout d'un recul de 10 unités
+        Vector3 zoomOutTarget = cameraTransform.position - cameraTransform.forward * 10f; // Ajout d'un recul de 10 unités
 
-        // 🎥 Phase 1 : Zoom arrière (400ms)
+        // Phase 1 : Zoom arrière (400ms)
         float zoomTime = 0f;
         while (zoomTime < cameraZoomDuration)
         {
             zoomTime += Time.unscaledDeltaTime;
             float zoomProgress = zoomTime / cameraZoomDuration;
-            cameraTransform.position = Vector3.Lerp(cameraTransform.position, zoomOutTarget, zoomProgress); // 🔹 Applique le recul
+            cameraTransform.position = Vector3.Lerp(cameraTransform.position, zoomOutTarget, zoomProgress); // Applique le recul
             yield return null;
         }
 
-        // 🎥 Phase 2 : Zoom rapide vers le joueur (100ms)
+        // Phase 2 : Zoom rapide vers le joueur (100ms)
         zoomTime = 0f;
         while (zoomTime < cameraZoomInDuration)
         {
@@ -212,7 +212,7 @@ public class CustomPlayerMovement : MonoBehaviour
             yield return null;
         }
 
-        // 🔹 Appliquer le ralentissement du temps après l'effet de caméra
+        // Appliquer le ralentissement du temps après l'effet de caméra
         while (elapsedTime < duration)
         {
             elapsedTime += Time.unscaledDeltaTime;
@@ -232,7 +232,7 @@ public class CustomPlayerMovement : MonoBehaviour
         cameraController.isCameraAnimating = false;
     }
 
-    // 🔹 Coroutine pour relancer le temps et désactiver progressivement la vignette
+    // Coroutine pour relancer le temps et désactiver progressivement la vignette
     IEnumerator ResumeTimeCoroutine(float duration)
     {
         var cameraController = cameraTransform.gameObject.GetComponent<TPSCameraController>();
@@ -247,19 +247,19 @@ public class CustomPlayerMovement : MonoBehaviour
         float startVignette = 1f;
         float endVignette = 0f;
 
-        Vector3 zoomInTarget = cameraTransform.position + cameraTransform.forward * 10f; // 🔹 Remet la caméra en avant
+        Vector3 zoomInTarget = cameraTransform.position + cameraTransform.forward * 10f; // Remet la caméra en avant
 
-        // 🎥 Phase 1 : Zoom rapide vers le joueur (100ms)
+        // Phase 1 : Zoom rapide vers le joueur (100ms)
         float zoomTime = 0f;
         while (zoomTime < cameraZoomInDuration)
         {
             zoomTime += Time.unscaledDeltaTime;
             float zoomProgress = zoomTime / cameraZoomInDuration;
-            cameraTransform.position = Vector3.Lerp(cameraTransform.position, zoomInTarget, zoomProgress); // 🔹 Annule le recul
+            cameraTransform.position = Vector3.Lerp(cameraTransform.position, zoomInTarget, zoomProgress); // Annule le recul
             yield return null;
         }
 
-        // 🎥 Phase 2 : Zoom arrière (400ms)
+        // Phase 2 : Zoom arrière (400ms)
         zoomTime = 0f;
         while (zoomTime < cameraZoomDuration)
         {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class TerrainBorder : MonoBehaviour
 {
-    public Terrain terrain; // À assigner dans l'Inspector
+    public Terrain terrain;
     public List<GameObject> treePrefabs; // Liste de prefabs d'arbres
     public int outerDensity = 60; // Densité d'arbres sur le bord extérieur
     public int innerDensity = 20; // Densité minimale sur la couche la plus intérieure
@@ -36,17 +36,17 @@ public class TerrainBorder : MonoBehaviour
         float height = terrain.terrainData.size.y;
 
         Vector3[] positions = {
-            new Vector3(0, height / 2, length / 2),      // Gauche
-            new Vector3(width, height / 2, length / 2),  // Droite
-            new Vector3(width / 2, height / 2, 0),       // Avant
-            new Vector3(width / 2, height / 2, length)   // Arrière
+            new Vector3(0, height / 2, length / 2),     
+            new Vector3(width, height / 2, length / 2),  
+            new Vector3(width / 2, height / 2, 0),  
+            new Vector3(width / 2, height / 2, length)   
         };
 
         Vector3[] scales = {
-            new Vector3(1, height, length),  // Mur gauche
-            new Vector3(1, height, length),  // Mur droit
-            new Vector3(width, height, 1),  // Mur avant
-            new Vector3(width, height, 1)   // Mur arrière
+            new Vector3(1, height, length),  
+            new Vector3(1, height, length),  
+            new Vector3(width, height, 1), 
+            new Vector3(width, height, 1)   
         };
 
         for (int i = 0; i < 4; i++)
@@ -70,7 +70,6 @@ public class TerrainBorder : MonoBehaviour
         {
             float depthOffset = layer * depthSpacing;
 
-            // Densité progressive (plus dense à l'extérieur)
             int treeDensity = Mathf.RoundToInt(Mathf.Lerp(outerDensity, innerDensity, (float)layer / (depthLayers - 1)));
 
             for (int i = 0; i < treeDensity; i++)
@@ -78,7 +77,6 @@ public class TerrainBorder : MonoBehaviour
                 float x = Random.Range(0, width);
                 float z = Random.Range(0, length);
 
-                // Placement des arbres aux bordures (vers l'intérieur)
                 PlaceTree(x, 0 + depthOffset);       // Bord avant
                 PlaceTree(x, length - depthOffset);  // Bord arrière
                 PlaceTree(0 + depthOffset, z);       // Bord gauche
@@ -91,19 +89,17 @@ public class TerrainBorder : MonoBehaviour
     {
         if (treePrefabs.Count == 0) return;
 
-        // Sélectionner un arbre aléatoire
         GameObject treePrefab = treePrefabs[Random.Range(0, treePrefabs.Count)];
 
-        // Ajuster la hauteur en fonction du terrain
+        // hauteur en fonction du terrain
         float y = terrain.SampleHeight(new Vector3(x, 0, z)) - 0.5f; // Ajustement pour éviter qu'il flotte
 
-        // Créer l'arbre
         GameObject tree = Instantiate(treePrefab, new Vector3(x, y, z), Quaternion.identity, parent);
 
-        // Appliquer une rotation aléatoire
+        // rotation aléatoire
         tree.transform.Rotate(0, Random.Range(0, 360), 0);
 
-        // Appliquer une échelle aléatoire
+        // échelle aléatoire
         float scaleVariation = Random.Range(0.8f, 1.2f);
         tree.transform.localScale *= scaleVariation;
     }

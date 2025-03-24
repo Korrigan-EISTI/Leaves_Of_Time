@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class EnvironmentSpawner : MonoBehaviour
 {
-    public GameObject environmentPrefab; // Le prefab à instancier
-    private GameObject environmentInstance; // Instance créée
+    public GameObject environmentPrefab; 
+    private GameObject environmentInstance; 
 
     void Start()
     {
@@ -14,7 +14,7 @@ public class EnvironmentSpawner : MonoBehaviour
         }
 
         environmentInstance = Instantiate(environmentPrefab, Vector3.zero, Quaternion.identity, gameObject.transform);
-        environmentInstance.name = "Environment_Instance"; // Renommer pour éviter les duplicatas
+        environmentInstance.name = "Environment_Instance"; 
 
         Debug.Log("Environnement instancié !");
     }

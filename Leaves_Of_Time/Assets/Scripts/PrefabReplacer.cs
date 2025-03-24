@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 public class PrefabReplacer : MonoBehaviour
 {
-    // Liste des noms partiels des prefabs à remplacer
     public string[] oldPrefabNames = { "Tree7A", "Tree7B", "Tree8A", "Tree8B" };
 
-    // Liste des nouveaux prefabs correspondants
     public GameObject[] newPrefabs;
 
     void Start()
@@ -18,9 +16,6 @@ public class PrefabReplacer : MonoBehaviour
         }
 
         ReplacePrefabs();
-
-        // Supprime le script après exécution
-        Destroy(this);
     }
 
     void ReplacePrefabs()
@@ -31,7 +26,7 @@ public class PrefabReplacer : MonoBehaviour
         {
             for (int i = 0; i < oldPrefabNames.Length; i++)
             {
-                if (obj.name.Contains(oldPrefabNames[i])) // Vérifie si le nom contient la chaîne
+                if (obj.name.Contains(oldPrefabNames[i])) 
                 {
                     Vector3 position = obj.transform.position;
                     Quaternion rotation = obj.transform.rotation;
@@ -44,7 +39,7 @@ public class PrefabReplacer : MonoBehaviour
 
                     DestroyImmediate(obj); // Supprime immédiatement l'ancien objet
 
-                    break; // Évite de tester d'autres noms une fois remplacé
+                    break; 
                 }
             }
         }

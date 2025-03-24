@@ -8,6 +8,7 @@ public class EnvironmentTimeControl : MonoBehaviour
     private bool isPaused = false;
     public bool canBreakTime = false;
     public int timeItemsCount = 0; // Compteur d'items de temps
+    private const int MAX_TIME_ITEMS = 3;
     public float pauseDuration = 3f;
     public float mainDollyZoomEffectDuration = 2f;
     public Camera mainCamera;
@@ -59,8 +60,15 @@ public class EnvironmentTimeControl : MonoBehaviour
         }
     }
 
-    public void AddTimeItem()
+    public bool AddTimeItem()
     {
+        // Vérifie si on peut ajouter un item (limite non atteinte)
+        if (timeItemsCount >= MAX_TIME_ITEMS)
+        {
+            Debug.Log("Limite d'items de temps atteinte (3 max) ! Impossible d'en collecter plus.");
+            return false; 
+        }
+
         timeItemsCount++;
         canBreakTime = true;
         Debug.Log($"AddTimeItem appelé ! timeItemsCount = {timeItemsCount}, canBreakTime = {canBreakTime}");
@@ -68,8 +76,10 @@ public class EnvironmentTimeControl : MonoBehaviour
         if (timeItemsCount == 1 && !hasShownPrompt && timeStopPrompt != null)
         {
             timeStopPrompt.gameObject.SetActive(true);
-            hasShownPrompt = true; 
+            hasShownPrompt = true;
         }
+
+        return true; 
     }
 
     private IEnumerator HandleTimePause(Clock clock)
