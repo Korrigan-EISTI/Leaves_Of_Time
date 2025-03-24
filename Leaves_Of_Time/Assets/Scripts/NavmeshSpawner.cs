@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Chronos;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -25,12 +26,23 @@ public class NavMeshSpawner : MonoBehaviour
 
     private IEnumerator SpawnRoutine()
     {
+        // Récupère ou crée la clock Chronos associée au groupe "GlobalEnvironment"
+        Clock clock = Timekeeper.instance.Clock("GroupEnvironment");
+
         while (true)
         {
             SpawnAgent();
-            yield return new WaitForSeconds(spawnInterval);
+
+            float startTime = clock.time;
+
+            // Attend exactement spawnInterval secondes selon la clock Chronos
+            while (clock.time < startTime + spawnInterval)
+            {
+                yield return null;
+            }
         }
     }
+
 
     private void SpawnAgent()
     {
