@@ -35,6 +35,7 @@ public class NavMeshSpawner : MonoBehaviour
     private void SpawnAgent()
     {
         GameObject spawnedObject = Instantiate(prefab, transform.position, Quaternion.identity);
+        spawnedObject.SetActive(true);
         NavMeshAgent agent = spawnedObject.GetComponent<NavMeshAgent>();
 
         if (agent == null)
